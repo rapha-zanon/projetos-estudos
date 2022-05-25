@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Comissoões</title>
+    <link rel="icon" type="image/png" href="./imagens/Flamex.png">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://unpkg.com/vue-numeric"></script>
+</head>
+<body>
+    <main>
+        <h1>Flamex - Simulador Online</h1>
+        <div class="box">
+            <img src="./imagens/Flamex.png">
+            <div class="first-step">
+                    <label for="tabela">
+                    <span>Tabela</span>
+                    <select name="tabela" id="tabela">
+                        <option value="" disabled selected hidden>Selecione</option>
+                        <option value="novo-inss">INSS - NOVO</option>
+                        <option value="novo-inss">INSS - REFIN</option>
+                        <option value="novo-inss">INSS - PORT</option>
+                    </select>
+                    </label>
+
+                    <label for="producao">
+                    <span>Produção</span>
+                    <input type="number" placeholder="R$" id="producao">
+                    </label>
+                    <label for="taxa">
+                    <span>Média Comissão</span>
+                    <input type="number" placeholder="%" id="taxa">
+                    </label>
+                    <button class="botao" onclick="validate()">Simular</button>
+            </div>
+            <div class="second-step">
+                <h2>Comissão a receber</h2>
+                <p id="resultado">...</p>
+                <button onclick="go(2,1)">Calcular novamente</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+<script>
+    const firstDiv = document.querySelector('.first-step');
+const secondDiv = document.querySelector('.second-step');
+
+function go(currentStep, nextStep)
+{
+    let dNone, dBlock;
+    if(currentStep == 1)
+    {
+        dNone = firstDiv;
+    }
+    else if(currentStep == 2)
+    {
+        dNone = secondDiv;
+    }
+    dNone.style.display = 'none';
+
+    if(nextStep == 1)
+    {
+        dBlock = firstDiv;
+    }
+    else if(nextStep == 2)
+    {
+        dBlock = secondDiv;
+    }
+    dBlock.style.display = 'block';
+}
+
+
+function validate()
+{
+    const producao = document.getElementById('producao');
+    const taxa = document.getElementById('taxa');
+    producao.style.border = 'none';
+    taxa.style.border = 'none';
+    if(!producao.value || !taxa.value)
+    {
+        if(!producao && !taxa.value)
+        {
+            producao.style.border = '1px solid red';
+            taxa.style.border = '1px solid red';
+        }
+        else if(!producao.value)
+        {
+            producao.style.border = '1px solid red';
+        }
+        else
+        {
+            taxa.style.border = '1px solid red';
+        }
+    }
+    else
+    {
+        const currencyFormatter = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        });
+
+        let simulacao = producao.value * (taxa.value / 100);
+        const result = document.getElementById('resultado');
+        result.innerHTML = currencyFormatter.format(simulacao);
+        go(1,2)
+    }
+}
+</script>
+</html>
